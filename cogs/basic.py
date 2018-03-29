@@ -8,7 +8,7 @@ class SimpleCog:
         self.bot = bot
 
     @commands.command(name='square', description="Squares a number inputted by the user", brief="Squares a number")
-    async def square(number: int):
+    async def square(self, number: int):
     	squared_number = (number * number)
     	await bot.say("The answer is " + str(squared_number))
     	print("square " + str(squared_number))
@@ -21,7 +21,7 @@ class SimpleCog:
         await bot.say(f'The sum of **{first}** and **{second}** is **{total}**')
 
     @commands.command(pass_context=True, name='8ball', description="Answers a yes/no question.", brief="Answers from the beyond")
-    async def eight_ball(ctx, self):
+    async def eight_ball(self, context):
     	possible_responses = [
     		'That is a resounding no',
     		'It is not looking likely',
@@ -30,7 +30,7 @@ class SimpleCog:
     		'Definitely',
     	]
     	random_choice = random.choice(possible_responses)
-    	await bot.say("**" + random_choice + "** " + ctx.message.author.mention)
+    	await bot.say("**" + random_choice + "** " + context.message.author.mention)
     	print("eight ball " + random_choice)
 
 def setup(bot):
