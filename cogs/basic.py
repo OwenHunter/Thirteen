@@ -20,8 +20,8 @@ class SimpleCog:
         total = first + second
         await bot.say(f'The sum of **{first}** and **{second}** is **{total}**')
 
-    @commands.command(name='8ball', description="Answers a yes/no question.", brief="Answers from the beyond")
-    async def eight_ball(self):
+    @commands.command(pass_context=True, name='8ball', description="Answers a yes/no question.", brief="Answers from the beyond")
+    async def eight_ball(ctx, self):
     	possible_responses = [
     		'That is a resounding no',
     		'It is not looking likely',
@@ -30,7 +30,7 @@ class SimpleCog:
     		'Definitely',
     	]
     	random_choice = random.choice(possible_responses)
-    	await bot.say("**" + random_choice + "**")
+    	await bot.say("**" + random_choice + "** " + ctx.message.author.mention)
     	print("eight ball " + random_choice)
 
 def setup(bot):
