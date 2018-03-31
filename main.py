@@ -28,7 +28,7 @@ async def on_ready():
 
     # Changes our bots Playing Status. type=1(streaming) for a standard game you could remove type and url.
     await bot.change_presence(game=discord.Game(name='.help'))
-    print(f'Successfully logged in and booted...\n\nHistory:')
+    print(f'Logged in and booted...\n\nHistory:')
 
 
 bot.run(TOKEN, bot=True, reconnect=True)
