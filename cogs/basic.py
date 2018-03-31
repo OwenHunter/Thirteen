@@ -1,9 +1,17 @@
+#basic cog setup
 import discord
 from discord.ext import commands
-import random
 from __main__ import bot
 
-class SimpleCog:
+
+#cog specific
+import random
+import urllib
+
+class Basic_Commmands:
+
+    __author__ = "Owen"
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -13,12 +21,14 @@ class SimpleCog:
     	await bot.say("The answer is " + str(squared_number))
     	print("square " + str(squared_number))
 
-    @commands.command(name='add', aliases=['plus'])
-    async def do_addition(self, first: int, second: int):
-        """A simple command which does addition on two integer values."""
-
+    @commands.command(name='add', description="Adds two integers together", brief="Adds two numbers", pass_context=True)
+    async def do_addition(self, context, first: int, second: int):
         total = first + second
-        await bot.say(f'The sum of **{first}** and **{second}** is **{total}**')
+        await bot.say("The sum of **{first}** and **{second}** is **{total}**, {mention}".format(first = first,
+                                                                                                 second = second,
+                                                                                                 total = total,
+                                                                                                 mention = context.message.author.mention))
+        print("add " + total)
 
     @commands.command(pass_context=True, name='8ball', description="Answers a yes/no question.", brief="Answers from the beyond")
     async def eight_ball(self, context):
@@ -33,5 +43,14 @@ class SimpleCog:
     	await bot.say("**" + random_choice + "** " + context.message.author.mention)
     	print("eight ball " + random_choice)
 
+    @commands.command(name='clear', description="Clears messages from a channel", brief="Clears messages", pass_context=True)
+    async def clear(self, context, number):
+        mgs = []
+        number = int(number)
+        async for x in bot.logs_from(context.message.channel, limit=number):
+            mgs.append(x)
+        print("clear " + str(number))
+        await bot.delete_messages(mgs)
+
 def setup(bot):
-    bot.add_cog(SimpleCog(bot))
+    bot.add_cog(Basic_Commmands(bot))
