@@ -11,7 +11,7 @@ TOKEN = configParser.get('api-config', 'token')
 
 bot = Bot(command_prefix='.')
 
-initial_extensions = ['cogs.basic', 'cogs.lol']
+initial_extensions = ['cogs.basic', 'cogs.lol', 'cogs.csgo']
 
 for extension in initial_extensions:
     try:
@@ -26,7 +26,6 @@ async def on_ready():
 
     print(f'\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
 
-    # Changes our bots Playing Status. type=1(streaming) for a standard game you could remove type and url.
     await bot.change_presence(game=discord.Game(name='.help'))
     print(f'Logged in and booted...\n\nHistory:')
 
