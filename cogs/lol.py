@@ -2,13 +2,13 @@
 import discord
 from discord.ext import commands
 from __main__ import bot
-import configparser
 
+
+#cog specific
+import configparser
 configParser = configparser.RawConfigParser()
 configFilePath = r'config.txt'
 configParser.read(configFilePath)
-
-#cog specific
 from riotwatcher import RiotWatcher
 RiotAPI = configParser.get('api-config', 'riot')
 watcher = RiotWatcher(RiotAPI)

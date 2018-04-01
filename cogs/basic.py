@@ -6,7 +6,6 @@ from __main__ import bot
 
 #cog specific
 import random
-import urllib
 
 class Basic_Commmands:
 
