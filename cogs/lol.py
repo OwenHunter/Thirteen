@@ -6,10 +6,11 @@ from __main__ import bot
 
 #cog specific
 import configparser
+from riotwatcher import RiotWatcher
+import json
 configParser = configparser.RawConfigParser()
 configFilePath = r'config.txt'
 configParser.read(configFilePath)
-from riotwatcher import RiotWatcher
 RiotAPI = configParser.get('api-config', 'riot')
 watcher = RiotWatcher(RiotAPI)
 
@@ -19,13 +20,14 @@ class League_Commands:
         self.bot = bot
 
     @commands.command(name='league.getinfo', decription="Gets information about a summoner", brief="Gets summoner info", pass_context=True)
-    async def get_info(self, context, summonerName, region):
+    async def get_info(self, context, region, summonerName):
         summoner = watcher.summoner.by_name(region.lower() + '1', summonerName)
+        print(summoner)
         print("league.getinfo {name} {id} {level} {region}".format(name=summoner['name'],
                                                                     id=summoner['id'],
                                                                     level=summoner['summonerLevel'],
                                                                     region=region))
-        await bot.say("{name}(ID: {id}) is a level {level} summoner playing on {region}, {mention}".format(name=summoner['name'],
+        await bot.say("** {name} (ID: *{id}*) is a level *{level}* summoner playing on *{region}* **, {mention}".format(name=summoner['name'],
                                                                                                               id=summoner['id'],
                                                                                                               level=summoner['summonerLevel'],
                                                                                                               region=region,
@@ -63,12 +65,13 @@ class League_Commands:
                                                                             div=rank_info[queue]['rank'],
                                                                             lp=rank_info[queue]['leaguePoints'],
                                                                             type=queueType))
-        await bot.say("{name} is in {tier} {div}, and has {lp} LP in {type}, {mention}".format(name=summoner['name'],
+        await bot.say("***{name}* is in *{tier} {div}*, and has *{lp}* LP in *{type}***, {mention}".format(name=summoner['name'],
                                                                                                   tier=rank_info[queue]['tier'],
                                                                                                   div=rank_info[queue]['rank'],
                                                                                                   lp=rank_info[queue]['leaguePoints'],
                                                                                                   type=queueType,
                                                                                                   mention=context.message.author.mention))
+
 
 def setup(bot):
     bot.add_cog(League_Commands(bot))

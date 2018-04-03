@@ -22,7 +22,7 @@ class Rocket_Commands:
 
     @commands.command(name="rocket.getinfo", pass_context=True)
     async def get_player(self, context):
-        raw = await client.get_player("mystifiedmeat3", PLATFORM_ID_LUT["STEAM"])
+        raw = await client.get_player("mystifiedmeat3", PLATFORM_ID_LUT[STEAM])
         print(raw)
 
 def setup(bot):

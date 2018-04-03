@@ -9,7 +9,8 @@ configParser.read(configFilePath)
 
 TOKEN = configParser.get('api-config', 'token')
 
-bot = Bot(command_prefix='.')
+prefix = '!'
+bot = Bot(command_prefix=prefix)
 
 initial_extensions = ['cogs.basic', 'cogs.lol', 'cogs.csgo']
 
@@ -26,8 +27,9 @@ async def on_ready():
 
     print(f'\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
 
-    await bot.change_presence(game=discord.Game(name='.help'))
+    await bot.change_presence(game=discord.Game(name= prefix + 'help'))
     print(f'Logged in and booted...\n\nHistory:')
+
 
 
 bot.run(TOKEN, bot=True, reconnect=True)
