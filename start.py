@@ -9,8 +9,14 @@ configParser.read(configFilePath)
 
 TOKEN = configParser.get('api-config', 'token')
 
-prefix = '!'
+prefix = '.'
 bot = Bot(command_prefix=prefix)
+
+channel_chat = 420283899134869504
+channel_memes = 420284036037083137
+channel_homework = 388362227876495362
+channel_pictures = 373092289335263237
+channel_music = 400329717372289046
 
 initial_extensions = ['cogs.basic', 'cogs.lol', 'cogs.csgo']
 
