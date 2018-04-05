@@ -55,12 +55,12 @@ class CSGO_Commmands:
             await bot.say("Something went wrong! Make sure the Steam username is correct.")
 
         total_kills = findstat(data, 'total_kills')
-        print("csgo.kills " + player + " " + str(total_kills))
+        print("csgo.overallkills " + player + " " + str(total_kills))
         await bot.say("**{player} has a total of {kills} kills**, {mention}".format(player = player,
                                                                             kills = total_kills,
                                                                             mention = context.message.author.mention))
 
-    @commands.command(name="csgo.kills", pass_context=True)
+    @commands.command(name="csgo.kills", description="Gets the amount of kills per weapon by the player inputted", brief="Gets the amount of kills per weapon", pass_context=True)
     async def weaponkills(self, context, weapon, player):
         try:
             url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
@@ -100,7 +100,7 @@ class CSGO_Commmands:
         try:
             total_kills = findstat(data, 'total_kills_' + weapon_name.lower())
             print("csgo.kills " + weapon + " " + player + " " +str(total_kills))
-            await bot.say("**{player} has a total of {kills} kills with {weapon}**, {mention}".format(player=player,
+            await bot.say("**{player} has a total of {kills} kills with the  {weapon}**, {mention}".format(player=player,
                                                                                                         kills=total_kills,
                                                                                                         weapon=weapon,
                                                                                                         mention=context.message.author.mention))
@@ -168,8 +168,8 @@ class CSGO_Commmands:
                                                                                         bombs = total_defused_bombs,
                                                                                         mention = context.message.author.mention))
 
-    @commands.command(name="csgo.wins", description="Gets the inputted player's amount of wins", brief="Gets the amount of wins", pass_context=True)
-    async def wins(self, context, player):
+    @commands.command(name="csgo.overallwins", description="Gets the inputted player's amount of wins", brief="Gets the amount of wins", pass_context=True)
+    async def overallwins(self, context, player):
         try:
             url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
             data = requests.get(url).text
@@ -287,6 +287,176 @@ class CSGO_Commmands:
         await bot.say("**{player} has won a total of {pistolwins} pistol rounds**, {mention}".format(player = player,
                                                                                             pistolwins = total_pistolwins,
                                                                                             mention = context.message.author.mention))
+
+    @commands.command(name="csgo.donations", description="Gets the amount of weapons donated by the player inputted", brief="Gets the amount of weapons donated", pass_context=True)
+    async def donations(self, context, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        total_donations = findstat(data, 'total_weapons_donated')
+        print("csgo.donations " + player + " " + str(total_donations))
+        await bot.say("**{player} has donated a total of {weapons} weapons**, {mention}".format(player = player,
+                                                                                                weapons = total_donations,
+                                                                                                mention = context.message.author.mention))
+
+    @commands.command(name="csgo.shotshit", description="Gets the amount of shots hit by the player inputted", brief="Gets the amount of shots hit", pass_context=True)
+    async def shots_hit(self, context, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        total_shots_hit = findstat(data, 'total_shots_hit')
+        print("csgo.shotshit " + player + " " + str(total_shots_hit))
+        await bot.say("**{player} has hit a total of {hit} shots**, {mention}".format(player = player,
+                                                                                        hit = total_shots_hit,
+                                                                                        mention = context.message.author.mention))
+
+    @commands.command(name="csgo.roundsplayed", description="Gets the amount of rounds played by the player inputted", brief="Gets the amount of rounds played overall", pass_context=True)
+    async def rounds_played(self, context, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        total_rounds_played = findstat(data, 'total_rounds_played')
+        print("csgo.roundsplayed " + player + " " + str(total_rounds_played))
+        await bot.say("**{player} has played a total of {rounds} rounds**, {mention}".format(player = player,
+                                                                                                rounds = total_rounds_played,
+                                                                                                mention = context.message.author.mention))
+
+    @commands.command(name="csgo.totalmvps", description="Gets the amount of MVPs earned by the player inputted", brief="Gets the amount of MVPs earned", pass_context=True)
+    async def total_mvps(self, context, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        total_mvps = findstat(data, 'total_mvps')
+        print("csgo.totalmvps " + player + " " + str(total_mvps))
+        await bot.say("**{player} has earned a total of {mvp} MVPs**, {mention}".format(player = player,
+                                                                                        mvp = total_mvps,
+                                                                                        mention = context.message.author.mention))
+
+    @commands.command(name="csgo.wins", description="Gets the amount of wins per map by the player inputted", brief="Gets the amount of wins per map", pass_context=True)
+    async def wins(self, context, csgo_map, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        map_name = csgo_map
+
+        if csgo_map.lower() == "assault":
+            map_name = "cs_assault"
+
+        if csgo_map.lower() == "italy":
+            map_name = "cs_italy"
+
+        if csgo_map.lower() == "cobble" or "cobblestone":
+            map_name = "de_cbble"
+
+        if csgo_map.lower() == "dust2":
+            map_name = "de_dust2"
+
+        if csgo_map.lower() == "dust":
+            map_name = "de_dust"
+
+        if csgo_map.lower() == "inferno":
+            map_name = "de_inferno"
+
+        if csgo_map.lower() == "nuke":
+            map_name = "de_nuke"
+
+        if csgo_map.lower() == "train":
+            map_name = "de_train"
+
+        if csgo_map.lower() == "house":
+            map_name = "de_house"
+
+        if csgo_map.lower() == "vertigo":
+            map_name = "de_vertigo"
+
+        if csgo_map.lower() == "monastery":
+            map_name = "ar_monastery"
+
+        if csgo_map.lower() == "shoots":
+            map_name = "ar_shoots"
+
+        if csgo_map.lower() == "baggage":
+            map_name = "ar_baggage"
+
+        if csgo_map.lower() == "lake":
+            map_name = "de_lake"
+
+        if csgo_map.lower() == "stmarc":
+            map_name = "de_stmarc"
+
+        if csgo_map.lower() == "safehouse":
+            map_name = "de_safehouse"
+
+        total_wins = findstat(data, 'total_wins_map_' + map_name)
+        print("csgo.wins " + csgo_map + " " + player)
+        await bot.say("**{player} has won a total of {wins} games on {csgo_map}**, {mention}".format(player=player,
+                                                                                                    wins=total_wins,
+                                                                                                    csgo_map=csgo_map,
+                                                                                                    mention=context.message.author.mention))
+
+    @commands.command(name="csgo.matches", pass_context=True)
+    async def matches(self, context, player):
+        try:
+            url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=FE3C600EB76959F47F80C707467108F2&vanityurl=" + player
+            data = requests.get(url).text
+            data = json.loads(data)
+            steamid = data['response']['steamid']
+
+            url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=FE3C600EB76959F47F80C707467108F2&steamid=" + steamid
+            data = requests.get(url).text
+            data = json.loads(data)
+        except:
+            await bot.say("Something went wrong! Make sure the Steam username is correct.")
+
+        total_matches = findstat(data, 'total_matches_played')
+        await bot.say("**{player} has played a total of {matches} matches**, {mention}".format(player=player,
+                                                                                                matches=total_matches,
+                                                                                                mention=context.message.author.mention))
 
 def setup(bot):
     bot.add_cog(CSGO_Commmands(bot))
