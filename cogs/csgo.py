@@ -6,6 +6,7 @@ from __main__ import bot
 #cog specific
 import requests
 import json
+import feedparser
 
 def findstat(data, stat_name):
     for stat in data['playerstats']['stats']:
@@ -454,9 +455,21 @@ class CSGO_Commmands:
             await bot.say("Something went wrong! Make sure the Steam username is correct.")
 
         total_matches = findstat(data, 'total_matches_played')
+        print("csgo.matches " + total_matches + " " + player)
         await bot.say("**{player} has played a total of {matches} matches**, {mention}".format(player=player,
                                                                                                 matches=total_matches,
                                                                                                 mention=context.message.author.mention))
+
+    @commands.command(name="csgo.news", pass_context=True)
+    async def news(self, context):
+        data = feedparser.parse('https://www.hltv.org/rss/news')
+        title = data.entries[0].title
+        link = data.entries[0].link
+
+        print("csgo.news " + title + " " + link)
+        await bot.say("** {title} **, {mention}".format(title=title,
+                                                        mention=context.message.author.mention))
+        await bot.say("{link}".format(link=link))
 
 def setup(bot):
     bot.add_cog(CSGO_Commmands(bot))

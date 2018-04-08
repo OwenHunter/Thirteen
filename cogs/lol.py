@@ -8,6 +8,7 @@ from __main__ import bot
 import configparser
 from riotwatcher import RiotWatcher
 import json
+import feedparser
 configParser = configparser.RawConfigParser()
 configFilePath = r'config.txt'
 configParser.read(configFilePath)
@@ -71,6 +72,17 @@ class League_Commands:
                                                                                                   lp=rank_info[queue]['leaguePoints'],
                                                                                                   type=queueType,
                                                                                                   mention=context.message.author.mention))
+
+    @commands.command(name="league.news", pass_context=True)
+    async def news(self, context):
+        data = feedparser.parse('https://origin-esports-cms.thescore.com/lol.rss')
+        title = data.entries[0].title
+        link = data.entries[0].link
+
+        print("csgo.news " + title + " " + link)
+        await bot.say("** {title} **, {mention}".format(title=title,
+                                                        mention=context.message.author.mention))
+        await bot.say("{link}".format(link=link))
 
 
 def setup(bot):
