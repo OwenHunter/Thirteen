@@ -18,7 +18,7 @@ channel_homework = 388362227876495362
 channel_pictures = 373092289335263237
 channel_music = 400329717372289046
 
-initial_extensions = ['cogs.basic', 'cogs.lol', 'cogs.csgo']
+initial_extensions = ['cogs.basic', 'cogs.lol', 'cogs.csgo', 'cogs.overwatch']
 
 for extension in initial_extensions:
     try:

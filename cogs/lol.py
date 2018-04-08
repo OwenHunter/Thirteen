@@ -79,7 +79,7 @@ class League_Commands:
         title = data.entries[0].title
         link = data.entries[0].link
 
-        print("csgo.news " + title + " " + link)
+        print("league.news " + title + " " + link)
         await bot.say("** {title} **, {mention}".format(title=title,
                                                         mention=context.message.author.mention))
         await bot.say("{link}".format(link=link))
