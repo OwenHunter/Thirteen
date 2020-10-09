@@ -6,7 +6,7 @@ import requests
 import json
 from datetime import date, timedelta
 from discord.ext.commands import Bot
-TOKEN = "NjkxMzgwMjI4MTIzMDAwODcy.XnfITQ.K2EUx3XzEWOcxVSjzPC7FT-L2JU"
+from config import TOKEN
 
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching))
 
