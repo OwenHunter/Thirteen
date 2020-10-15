@@ -12,8 +12,8 @@ intents = discord.Intents.all()
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
 
 loopStop = False
-amongUsMessage = ""
-amongUsEmbed = None
+interestCheckMessage = ""
+interestCheckEmbed = None
 
 @bot.event
 async def on_ready():
@@ -84,34 +84,36 @@ async def leavePlease(context):
 	else:
 		await context.send("You do not have the permissions to do that...")
 
-@bot.command(name="amongus")
-async def amongUs(context, time=None):
-    if time != None:
-        global amongUsMessage, amongUsEmbed
+@bot.command(name="InterestCheck")
+async def interestCheck(context, game = None, time=None):
+    if time != None and game != None:
+        global interestCheckMessage, interestCheckEmbed
         
         await context.send("@everyone")
-        embedMsg = discord.Embed(title=f"Among Us at {time}?", colour=discord.Colour.red())
+        embedMsg = discord.Embed(title=f"{game} at {time}?", colour=discord.Colour.red())
         embedMsg.add_field(name="Yes: ", value=0)
         embedMsg.add_field(name="No: ", value=0)
 
-        amongUsEmbed = embedMsg
+        interestCheckEmbed = embedMsg
         
-        amongUsMessage = await context.send(embed=embedMsg)
-        await amongUsMessage.add_reaction("\U0001F44D")
-        await amongUsMessage.add_reaction("\U0001F44E")
-    else:
+        interestCheckMessage = await context.send(embed=embedMsg)
+        await interestCheckMessage.add_reaction("\U0001F44D")
+        await interestCheckMessage.add_reaction("\U0001F44E")
+    elif time == None:
         await context.send("Please input a time to play.")
+    elif game == None:
+        await context.send("Please input the game.")
 
 @bot.event
 async def on_reaction_add(reaction, user):
     msg = reaction.message
-    if msg == amongUsMessage and user.name != "thirteen":
-        yesCount = int(amongUsEmbed.fields[0].value)
-        noCount = int(amongUsEmbed.fields[1].value)
-        if len(amongUsEmbed.fields) == 2:
+    if msg == interestCheckMessage and user.name != "thirteen":
+        yesCount = int(interestCheckEmbed.fields[0].value)
+        noCount = int(interestCheckEmbed.fields[1].value)
+        if len(interestCheckEmbed.fields) == 2:
             playingString = ""
         else:
-            playingString = amongUsEmbed.fields[2].value
+            playingString = interestCheckEmbed.fields[2].value
 
         if reaction.emoji == "\U0001F44D":
             yesCount += 1
@@ -119,28 +121,28 @@ async def on_reaction_add(reaction, user):
         elif reaction.emoji =="\U0001F44E":
             noCount += 1
 
-        amongUsEmbed.set_field_at(0, name="Yes: ", value=yesCount)
-        amongUsEmbed.set_field_at(1, name="No: ", value=noCount)
+        interestCheckEmbed.set_field_at(0, name="Yes: ", value=yesCount)
+        interestCheckEmbed.set_field_at(1, name="No: ", value=noCount)
 
-        if playingString != "" and len(amongUsEmbed.fields) == 2:
+        if playingString != "" and len(interestCheckEmbed.fields) == 2:
             playingString = playingString[2:]
-            amongUsEmbed.add_field(name="Playing: ", value=playingString, inline=False)
+            interestCheckEmbed.add_field(name="Playing: ", value=playingString, inline=False)
         elif playingString != "":
-            amongUsEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
-        elif len(amongUsEmbed.fields) != 2:
-            amongUsEmbed.remove_field(2)
+            interestCheckEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+        elif len(interestCheckEmbed.fields) != 2:
+            interestCheckEmbed.remove_field(2)
 
-        await msg.edit(embed=amongUsEmbed)
+        await msg.edit(embed=interestCheckEmbed)
 
 @bot.event
 async def on_reaction_remove(reaction, user):
     msg = reaction.message
-    if msg == amongUsMessage:
+    if msg == interestCheckMessage:
         if reaction.emoji == "\U0001F44D":
-            amongUsEmbed.set_field_at(0, name="Yes: ", value=int(amongUsEmbed.fields[0].value)-1)
+            interestCheckEmbed.set_field_at(0, name="Yes: ", value=int(interestCheckEmbed.fields[0].value)-1)
             
-            if len(amongUsEmbed.fields) != 2:
-                playingString = amongUsEmbed.fields[2].value
+            if len(interestCheckEmbed.fields) != 2:
+                playingString = interestCheckEmbed.fields[2].value
                 if user.name in playingString:
                     playingString = playingString.replace(", " + user.name, "")
                     playingString = playingString.replace(user.name, "")
@@ -150,13 +152,13 @@ async def on_reaction_remove(reaction, user):
                     if playingString[:2] == ", ":
                         playingString = playingString[2:]
                 if playingString != "":
-                    amongUsEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+                    interestCheckEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
                 else:
-                    amongUsEmbed.remove_field(2)
+                    interestCheckEmbed.remove_field(2)
         elif reaction.emoji == "\U0001F44E":
-            amongUsEmbed.set_field_at(1, name="No: ", value=int(amongUsEmbed.fields[1].value)-1)
+            interestCheckEmbed.set_field_at(1, name="No: ", value=int(interestCheckEmbed.fields[1].value)-1)
 
-        await msg.edit(embed=amongUsEmbed)
+        await msg.edit(embed=interestCheckEmbed)
            
 @bot.event
 async def on_message(message):
