@@ -19,30 +19,6 @@ amongUsEmbed = None
 async def on_ready():
 	print("Logged in as " + bot.user.name)
 
-@bot.command(name="chad")
-async def chad(context):
-	await context.message.delete()
-	if "13hunteo" not in str(context.message.author):
-		await context.send(context.message.author.mention + random.choice([" is not a chad. :rofl: :rofl: :rofl:", " is a chad. :sunglasses: :sunglasses: :sunglasses: "]))
-	else:
-		await context.send(context.message.author.mention + " is an epic gamer. :sunglasses: :sunglasses: :sunglasses: :sunglasses: :sunglasses: ")
-
-@bot.command(name="chungus")
-async def chungus(context):
-	await context.message.delete()
-	await context.send(context.message.author.mention + " Chungus is " + f"{random.randint(1, 50)} feet and {random.randint(1, 12)} inches tall.")
-	await context.send(f"His penis is {random.randint(5, 20)} feet long.")
-
-@bot.command(name="spam")
-async def spam(context, user:discord.Member):
-	count = 0
-	bot.loop.create_task(channel_rename(context.message.channel, count))
-
-	while not loopStop:
-		await context.send(user.mention)
-		count += 1
-		await asyncio.sleep(.5)
-
 @bot.command(name="dndannounce")
 async def dndannounce(context, *, message=None):
 	calendar_events = requests.get(f"https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key={gcal_key}")
