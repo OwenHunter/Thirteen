@@ -6,7 +6,7 @@ import requests
 import json
 from datetime import date, timedelta
 from discord.ext.commands import Bot
-from config import TOKEN
+from config import TOKEN, people, gcal_key
 
 intents = discord.Intents.all()
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
@@ -45,8 +45,7 @@ async def spam(context, user:discord.Member):
 
 @bot.command(name="dndannounce")
 async def dndannounce(context, *, message=None):
-	calendar_events = requests.get("https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key=AIzaSyDyIYb-wPcMJeCmdO9dcLq_8DIQ5qAewJ4")
-	***REMOVED***
+	calendar_events = requests.get(f"https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key={gcal_key}")
 
 	sdate = date.today()
 	edate = sdate + timedelta(days=365)
