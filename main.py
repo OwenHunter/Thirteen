@@ -65,10 +65,6 @@ async def dndannounce(context, *, message=None):
 		embedVar.add_field(name="Not Here:", inline=False, value=peopleNotHere_message)
 	await context.send(embed=embedVar)
 
-async def channel_rename(channel, count):
-	time.sleep(20)
-	await channel.edit(name = str(count))
-
 @bot.command(name="killall")
 async def stopLoops(context):
 	global loopStop
