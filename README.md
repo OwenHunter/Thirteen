@@ -15,6 +15,6 @@ The commands that the bot currently have are:
 In order to run, this bot will need:
 - **Discord API Token**
 - **Google Calendar API Token**
-- **Dictionary of ** ***names *** **and ** *** email addresses***
+- **Dictionary of** ***names*** **and** ***email addresses***
 
 These should all be put into a **config.py** file in the root directory.
