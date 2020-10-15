@@ -19,7 +19,7 @@ amongUsEmbed = None
 async def on_ready():
 	print("Logged in as " + bot.user.name)
 
-@bot.command(name="dndannounce")
+@bot.command(name="dnd.announce")
 async def dndannounce(context, *, message=None):
 	calendar_events = requests.get(f"https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key={gcal_key}")
 
@@ -69,7 +69,7 @@ async def channel_rename(channel, count):
 	time.sleep(20)
 	await channel.edit(name = str(count))
 
-@bot.command(name="kilall")
+@bot.command(name="killall")
 async def stopLoops(context):
 	global loopStop
 	loopStop = True
