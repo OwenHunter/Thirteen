@@ -1,5 +1,5 @@
 # Thirteen - Discord Bot
-This Discord bot is a project, adding new commands as I need them in whatever servers I am in.
+This Discord bot is a project, programmed in Python, adding new commands as I need them in whatever servers I am in.
 
 The commands that the bot currently have are:
 - DnD.Announce
