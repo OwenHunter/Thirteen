@@ -8,9 +8,12 @@ from datetime import date, timedelta
 from discord.ext.commands import Bot
 from config import TOKEN
 
-bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching))
+intents = discord.Intents.all()
+bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
 
 loopStop = False
+amongUsMessage = ""
+amongUsEmbed = None
 
 @bot.event
 async def on_ready():
@@ -40,8 +43,8 @@ async def spam(context, user:discord.Member):
 		count += 1
 		await asyncio.sleep(.5)
 
-@bot.command(name="announce")
-async def announce(context, *, message=None):
+@bot.command(name="dndannounce")
+async def dndannounce(context, *, message=None):
 	calendar_events = requests.get("https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key=AIzaSyDyIYb-wPcMJeCmdO9dcLq_8DIQ5qAewJ4")
 	***REMOVED***
 
@@ -106,6 +109,80 @@ async def leavePlease(context):
 	else:
 		await context.send("You do not have the permissions to do that...")
 
+@bot.command(name="amongus")
+async def amongUs(context, time=None):
+    if time != None:
+        global amongUsMessage, amongUsEmbed
+        
+        await context.send("@everyone")
+        embedMsg = discord.Embed(title=f"Among Us at {time}?", colour=discord.Colour.red())
+        embedMsg.add_field(name="Yes: ", value=0)
+        embedMsg.add_field(name="No: ", value=0)
+
+        amongUsEmbed = embedMsg
+        
+        amongUsMessage = await context.send(embed=embedMsg)
+        await amongUsMessage.add_reaction("\U0001F44D")
+        await amongUsMessage.add_reaction("\U0001F44E")
+    else:
+        await context.send("Please input a time to play.")
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    msg = reaction.message
+    if msg == amongUsMessage and user.name != "thirteen":
+        yesCount = int(amongUsEmbed.fields[0].value)
+        noCount = int(amongUsEmbed.fields[1].value)
+        if len(amongUsEmbed.fields) == 2:
+            playingString = ""
+        else:
+            playingString = amongUsEmbed.fields[2].value
+
+        if reaction.emoji == "\U0001F44D":
+            yesCount += 1
+            playingString += ", " + user.name
+        elif reaction.emoji =="\U0001F44E":
+            noCount += 1
+
+        amongUsEmbed.set_field_at(0, name="Yes: ", value=yesCount)
+        amongUsEmbed.set_field_at(1, name="No: ", value=noCount)
+
+        if playingString != "" and len(amongUsEmbed.fields) == 2:
+            playingString = playingString[2:]
+            amongUsEmbed.add_field(name="Playing: ", value=playingString, inline=False)
+        elif playingString != "":
+            amongUsEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+        elif len(amongUsEmbed.fields) != 2:
+            amongUsEmbed.remove_field(2)
+
+        await msg.edit(embed=amongUsEmbed)
+
+@bot.event
+async def on_reaction_remove(reaction, user):
+    msg = reaction.message
+    if msg == amongUsMessage:
+        if reaction.emoji == "\U0001F44D":
+            amongUsEmbed.set_field_at(0, name="Yes: ", value=int(amongUsEmbed.fields[0].value)-1)
+            
+            if len(amongUsEmbed.fields) != 2:
+                playingString = amongUsEmbed.fields[2].value
+                if user.name in playingString:
+                    playingString = playingString.replace(", " + user.name, "")
+                    playingString = playingString.replace(user.name, "")
+                    
+                    if playingString[-2:] == ", ":
+                        playingString = playingString[:-2]
+                    if playingString[:2] == ", ":
+                        playingString = playingString[2:]
+                if playingString != "":
+                    amongUsEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+                else:
+                    amongUsEmbed.remove_field(2)
+        elif reaction.emoji == "\U0001F44E":
+            amongUsEmbed.set_field_at(1, name="No: ", value=int(amongUsEmbed.fields[1].value)-1)
+
+        await msg.edit(embed=amongUsEmbed)
+           
 @bot.event
 async def on_message(message):
 	await bot.process_commands(message)
