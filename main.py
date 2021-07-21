@@ -1,38 +1,42 @@
 import discord
 import asyncio
-import requests
 import json
 from discord.ext.commands import Bot
 from config import TOKEN
 
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
 
+loopStop = False
+interestCheckMessage = None
+interestCheckEmbed = None
+
 @bot.event
 async def on_ready():
 	print("Logged in as " + bot.user.name)
 
+	### global variables that need it
+	global loopStop, interestCheckEmbed, interestCheckMessage
+
 @bot.command(name="killall")
-async def stopLoops(context):
-	global loopStop
+async def stopLoops(context): #needs to check who issued the command - currently can be run by anyone
 	loopStop = True
 
 	await context.send("All loops halted.")
 
 @bot.command(name="logout")
 async def leavePlease(context):
-	if "13hunteo" in str(context.message.author):
+	if "13hunteo" in str(context.message.author): #shouldn't just be checking the name, should be checking ID
 		await context.send("Logging out...")
 		await bot.close()
 	else:
-		await context.send("You do not have the permissions to do that...")
+		await context.send("You do not have the permissions to do that...") #change to a DM? would fill up less room in channel
 
-@bot.command(name="InterestCheck")
+@bot.command(name="InterestCheck") #should be added into a cod - gaming cog?
 async def interestCheck(context, game = None, time=None):
     if time != None and game != None:
-        global interestCheckMessage, interestCheckEmbed
         
         await context.send("@everyone")
-        embedMsg = discord.Embed(title=f"{game} at {time}?", colour=discord.Colour.red())
+        embedMsg = discord.Embed(title=f"{game} at {time}?", colour=discord.Colour.red()) #should probably check it is in some date format, not just print text
         embedMsg.add_field(name="Yes: ", value=0)
         embedMsg.add_field(name="No: ", value=0)
 
