@@ -1,69 +1,15 @@
 import discord
-import random
-import time
 import asyncio
 import requests
 import json
-from datetime import date, timedelta
 from discord.ext.commands import Bot
-from config import TOKEN, people, gcal_key
+from config import TOKEN
 
-intents = discord.Intents.all()
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
-
-loopStop = False
-interestCheckMessage = ""
-interestCheckEmbed = None
 
 @bot.event
 async def on_ready():
 	print("Logged in as " + bot.user.name)
-
-@bot.command(name="dnd.announce")
-async def dndannounce(context, *, message=None):
-	calendar_events = requests.get(f"https://www.googleapis.com/calendar/v3/calendars/c2dn00h57qr69k3p732seqsai0@group.calendar.google.com/events?key={gcal_key}")
-
-	sdate = date.today()
-	edate = sdate + timedelta(days=365)
-	delta = edate - sdate
-
-	next_date = None
-
-	for i in range(delta.days + 1):
-		day = sdate + timedelta(days=i)
-		if day.weekday() == 0 or day.weekday() == 2:
-			if day != date.today():
-				next_date = day
-				break
-	
-	peopleNotHere = []
-	for item in json.loads(calendar_events.content)["items"]:
-		sDate = date.fromisoformat(item["start"]["date"])
-		eDate = date.fromisoformat(item["end"]["date"])
-		delta = eDate - sDate
-
-		for i in range(delta.days + 1):
-			day = sDate + timedelta(days = i)
-			if day == next_date:
-				peopleNotHere.append(people.get(item["creator"]["email"]))
-	
-	peopleNotHere_message = ""
-	for person in peopleNotHere:
-		peopleNotHere_message += person + ", "
-	if peopleNotHere_message != "":
-		peopleNotHere_message = peopleNotHere_message[:-2]
-
-	await context.message.delete()
-	await context.send("@everyone")
-
-	embedVar = discord.Embed(title="Next Session", colour=discord.Colour.red())
-	embedVar.add_field(name="Date:", value=next_date.strftime("%A %d") + " " + next_date.strftime("%B"))
-	embedVar.add_field(name="Time:", value="1:30 PM")
-	if message != None:
-		embedVar.add_field(name="Comment:", inline=False, value=message)
-	if peopleNotHere != []:
-		embedVar.add_field(name="Not Here:", inline=False, value=peopleNotHere_message)
-	await context.send(embed=embedVar)
 
 @bot.command(name="killall")
 async def stopLoops(context):
@@ -160,16 +106,8 @@ async def on_reaction_remove(reaction, user):
 async def on_message(message):
 	await bot.process_commands(message)
 	if not message.content.startswith("?"):
-		if "goose" in str(message.content).lower() and message.author != bot.user:
-			channel = message.channel
-			await channel.send("HONK", tts=True, delete_after=True)
-			await channel.send("***HONK***")
-			await channel.send(file=discord.File('honk.png'))
 		if "hey 13" in str(message.content).lower() or "hey thirteen" in str(message.content).lower():
 			channel = message.channel
 			await channel.send("Hey " + message.author.mention)
-		if ("mins" in str(message.content).lower() or "minutes" in str(message.content).lower() or "minute" in str(message.content).lower()) and (message.author.id == 250658105052889089) and (message.channel.id == 691694856350990409):
-			await message.channel.send("cOfFeE")
-			await message.channel.send(file=discord.File("coffee.jpg"))
 
 bot.run(TOKEN)
