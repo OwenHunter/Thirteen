@@ -31,7 +31,7 @@ async def leavePlease(context):
 	else:
 		await context.send("You do not have the permissions to do that...") #change to a DM? would fill up less room in channel
 
-@bot.command(name="InterestCheck") #should be added into a cod - gaming cog?
+@bot.command(name="InterestCheck") #should be added into a cog - gaming cog?
 async def interestCheck(context, game = None, time=None):
     if time != None and game != None:
         
