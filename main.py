@@ -10,10 +10,9 @@ intents.members = True
 bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
 
 loopStop = False
-interestCheckMessage = ""
-interestCheckEmbed = ""
+interestCheckMessage = []
 
-bot.add_cog(games(bot, interestCheckMessage, interestCheckEmbed))
+bot.add_cog(games(bot, interestCheckMessage))
 bot.add_cog(testing(bot, loopStop))
 
 

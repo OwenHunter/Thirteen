@@ -1,27 +1,30 @@
 import discord
 from discord.ext import commands
+import re
 
 class games(commands.Cog, name="Games"):
 
-    def __init__(self, bot, interestCheckEmbed, interestCheckMessage):
+    def __init__(self, bot, icMessage: list):
         self.bot = bot
-        self.interestCheckEmbed = interestCheckEmbed
-        self.interestCheckMessage = interestCheckMessage
+        self.icMessage = icMessage
     
-    @commands.command(name="InterestCheck", aliases=["interestcheck"])
-    async def interestCheck(self, context, time=None, *, game = None):
+    @commands.command(name="InterestCheck", aliases=["interestcheck", "ic"])
+    async def interestCheck(self, context, time=None, *, game=None):
         if time != None and game != None:
-            
-            await context.send("@everyone")
-            embedMsg = discord.Embed(title=f"{game} at {time}?", colour=discord.Colour.red()) #should probably check it is in some date format, not just print text
-            embedMsg.add_field(name="Yes: ", value=0)
-            embedMsg.add_field(name="No: ", value=0)
+            if len(re.findall("^(\d)?\d(:\d\d)?(a|p)m$", time)) > 0:
+                await context.send("@everyone")
+                embed = discord.Embed(title=f"{time} for {game}?", colour=discord.Colour.red()) #should probably check it is in some date format, not just print text
+                embed.add_field(name="Yes: ", value=0)
+                embed.add_field(name="No: ", value=0)
 
-            self.interestCheckEmbed = embedMsg
-            
-            self.interestCheckMessage = await context.send(embed=embedMsg)
-            await self.interestCheckMessage.add_reaction("\U0001F44D")
-            await self.interestCheckMessage.add_reaction("\U0001F44E")
+                message = await context.send(embed=embed)
+
+                self.icMessage.append(message)
+
+                await message.add_reaction("\U0001F44D")
+                await message.add_reaction("\U0001F44E")
+            else:
+                await context.send("Please format the time as:\n`h(h)(:mm)(am|pm)`")
         elif time == None:
             await context.send("Please input a time to play.")
         elif game == None:
@@ -29,13 +32,15 @@ class games(commands.Cog, name="Games"):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if reaction.message == self.interestCheckMessage and user.id != 691380228123000872:
-            yesCount = int(self.interestCheckEmbed.fields[0].value)
-            noCount = int(self.interestCheckEmbed.fields[1].value)
-            if len(self.interestCheckEmbed.fields) == 2:
+        if reaction.message in self.icMessage and user.id != 691380228123000872:
+            embed = reaction.message.embeds[0]
+
+            yesCount = int(embed.fields[0].value)
+            noCount = int(embed.fields[1].value)
+            if len(embed.fields) == 2:
                 playingString = ""
             else:
-                playingString = self.interestCheckEmbed.fields[2].value
+                playingString = embed.fields[2].value
 
             if reaction.emoji == "\U0001F44D":
                 yesCount += 1
@@ -43,27 +48,28 @@ class games(commands.Cog, name="Games"):
             elif reaction.emoji =="\U0001F44E":
                 noCount += 1
 
-            self.interestCheckEmbed.set_field_at(0, name="Yes: ", value=yesCount)
-            self.interestCheckEmbed.set_field_at(1, name="No: ", value=noCount)
+            embed.set_field_at(0, name="Yes: ", value=yesCount)
+            embed.set_field_at(1, name="No: ", value=noCount)
 
-            if playingString != "" and len(self.interestCheckEmbed.fields) == 2:
+            if playingString != "" and len(embed.fields) == 2:
                 playingString = playingString[2:]
-                self.interestCheckEmbed.add_field(name="Playing: ", value=playingString, inline=False)
+                embed.add_field(name="Playing: ", value=playingString, inline=False)
             elif playingString != "":
-                self.interestCheckEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
-            elif len(self.interestCheckEmbed.fields) != 2:
-                self.interestCheckEmbed.remove_field(2)
+                embed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+            elif len(embed.fields) != 2:
+                embed.remove_field(2)
 
-            await reaction.message.edit(embed=self.interestCheckEmbed)
+            await reaction.message.edit(embed=embed)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
-        if reaction.message == self.interestCheckMessage and user.id != 691380228123000872:
+        if reaction.message in self.icMessage and user.id != 691380228123000872:
+            embed = reaction.message.embeds[0]
             if reaction.emoji == "\U0001F44D":
-                self.interestCheckEmbed.set_field_at(0, name="Yes: ", value=int(self.interestCheckEmbed.fields[0].value)-1)
+                embed.set_field_at(0, name="Yes: ", value=int(embed.fields[0].value)-1)
                 
-                if len(self.interestCheckEmbed.fields) != 2:
-                    playingString = self.interestCheckEmbed.fields[2].value
+                if len(embed.fields) != 2:
+                    playingString = embed.fields[2].value
                     if user.name in playingString:
                         playingString = playingString.replace(", " + user.name, "")
                         playingString = playingString.replace(user.name, "")
@@ -73,10 +79,10 @@ class games(commands.Cog, name="Games"):
                         if playingString[:2] == ", ":
                             playingString = playingString[2:]
                     if playingString != "":
-                        self.interestCheckEmbed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
+                        embed.set_field_at(2, name="Playing: ", value=playingString, inline=False)
                     else:
-                        self.interestCheckEmbed.remove_field(2)
+                        embed.remove_field(2)
             elif reaction.emoji == "\U0001F44E":
-                self.interestCheckEmbed.set_field_at(1, name="No: ", value=int(self.interestCheckEmbed.fields[1].value)-1)
+                embed.set_field_at(1, name="No: ", value=int(embed.fields[1].value)-1)
 
-            await reaction.message.edit(embed=self.interestCheckEmbed)
+            await reaction.message.edit(embed=embed)
