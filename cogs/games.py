@@ -13,7 +13,7 @@ class games(commands.Cog, name="Games"):
         if time != None and game != None:
             if len(re.findall("^(\d)?\d(:\d\d)?(a|p)m$", time)) > 0:
                 await context.send("@everyone")
-                embed = discord.Embed(title=f"{time} for {game}?", colour=discord.Colour.red()) #should probably check it is in some date format, not just print text
+                embed = discord.Embed(title=f"{time}: {game}?", colour=discord.Colour.red()) #should probably check it is in some date format, not just print text
                 embed.add_field(name="Yes: ", value=0)
                 embed.add_field(name="No: ", value=0)
 
