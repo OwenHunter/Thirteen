@@ -1,6 +1,7 @@
 config.py
 .vscode/
 env/
+project
 
 ### https://github.com/github/gitignore/blob/master/Python.gitignore ###
 
