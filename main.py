@@ -16,6 +16,7 @@ interestCheckMessage = []
 
 bot.add_cog(games(bot, interestCheckMessage))
 bot.add_cog(testing(bot, loopStop))
+bot.add_cog()
 
 @bot.event
 async def on_ready():
@@ -28,5 +29,27 @@ async def on_message(message):
 		if "hey 13" in str(message.content).lower() or "hey thirteen" in str(message.content).lower():
 			channel = message.channel
 			await channel.send("Hey " + message.author.mention)
+
+class customHelp(discord.ext.commands.HelpCommand):
+    def __init__(self, bot):
+        self.bot = bot
+
+    # ?help
+    async def send_bot_help(self, mapping):
+        return await self.context.send("Main help command")
+
+    # ?help <command>
+    async def send_command_help(self, command):
+        return await self.context.send("Command help command")
+
+    #!help <group>
+    async def send_group_help(self, group):
+        return await self.context.send("Group help command")
+
+    #!help <cog>
+    async def send_cog_help(self, cog):
+        return await self.context.send("Cog help command")
+
+bot.help_command = customHelp()
 
 bot.run(TOKEN)
