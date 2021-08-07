@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 from discord.ext.commands import Bot
 from cogs.games import games
 from cogs.testing import testing
@@ -16,7 +17,6 @@ interestCheckMessage = []
 
 bot.add_cog(games(bot, interestCheckMessage))
 bot.add_cog(testing(bot, loopStop))
-bot.add_cog()
 
 @bot.event
 async def on_ready():
@@ -30,25 +30,12 @@ async def on_message(message):
 			channel = message.channel
 			await channel.send("Hey " + message.author.mention)
 
-class customHelp(discord.ext.commands.HelpCommand):
-    def __init__(self, bot):
-        self.bot = bot
-
-    # ?help
-    async def send_bot_help(self, mapping):
-        return await self.context.send("Main help command")
-
-    # ?help <command>
-    async def send_command_help(self, command):
-        return await self.context.send("Command help command")
-
-    #!help <group>
-    async def send_group_help(self, group):
-        return await self.context.send("Group help command")
-
-    #!help <cog>
-    async def send_cog_help(self, cog):
-        return await self.context.send("Cog help command")
+class customHelp(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            emby = discord.Embed(description=page)
+            await destination.send(embed=emby)
 
 bot.help_command = customHelp()
 
