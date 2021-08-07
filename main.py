@@ -4,10 +4,11 @@ from cogs.games import games
 from cogs.testing import testing
 from config import TOKEN
 
-bot = Bot(command_prefix="?", status=discord.Status.dnd)
+intents = discord.Intents.default()
+intents.members = True
 
-bot.intents = discord.Intents.default()
-bot.intents.members = True
+bot = Bot(command_prefix="?", status=discord.Status.dnd, intents=)
+
 bot.activity=discord.Activity(name="?", type=discord.ActivityType.listening)
 
 loopStop = False
