@@ -4,17 +4,17 @@ from cogs.games import games
 from cogs.testing import testing
 from config import TOKEN
 
-intents = discord.Intents.default()
-intents.members = True
+bot = Bot(command_prefix="?", status=discord.Status.dnd)
 
-bot = Bot(command_prefix="?", status=discord.Status.dnd, activity=discord.Activity(name="?", type=discord.ActivityType.watching), intents=intents)
+bot.intents = discord.Intents.default()
+bot.intents.members = True
+bot.activity=discord.Activity(name="?", type=discord.ActivityType.listening)
 
 loopStop = False
 interestCheckMessage = []
 
 bot.add_cog(games(bot, interestCheckMessage))
 bot.add_cog(testing(bot, loopStop))
-
 
 @bot.event
 async def on_ready():
