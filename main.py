@@ -7,7 +7,7 @@ from config import TOKEN
 intents = discord.Intents.default()
 intents.members = True
 
-bot = Bot(command_prefix="?", status=discord.Status.dnd, intents=)
+bot = Bot(command_prefix="?", status=discord.Status.dnd, intents=intents)
 
 bot.activity=discord.Activity(name="?", type=discord.ActivityType.listening)
 
